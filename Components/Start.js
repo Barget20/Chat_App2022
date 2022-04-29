@@ -22,6 +22,7 @@ export default class Start extends React.Component {
     charcoal: "#474056",
     grey: "#8A95A5",
     green: "#B9C6AE",
+    gold: "#FFCF40",
   };
   
   render() {
@@ -29,31 +30,68 @@ export default class Start extends React.Component {
         <View style={styles.container}>
           <ImageBackground source={Image} resizeMode="cover" style= {styles.headerImage}>
 
-          <Text style={styles.appTitle}>App Title</Text>
+          <Text style={styles.appTitle}>Chat App</Text>
+          <View style={styles.box1}>
+            <View style={styles.inputBox}>
+              <TextInput style={styles.yourName}
+              onChangeText={(text) => this.setState({ name: text})}
+              value={this.state.name}
+              placeholder="Your Name Here..." />
+            </View>
+          </View>
           {console.log(this.state.bgColor)}
-         
-        {/* Input box for setting the users name before enterting into chat screen */}
-          <Text style={styles.yourName}
-          //Input style={{height: 40, borderColor: 'gray', borderWidth: 1}}
-            onChangeText={(name) => this.setState({ name})}
-            value={this.state.name}
-            placeholder="Your Name Here..." />
-          
+            
         {/* Allows users to choose a background color/theme   */}
           <Text style={styles.backgroundColorChoose}>Choose Background Color:</Text>  
-            {/* Color Hex option codes go here! */}
+           
+        {/* Color Hex option codes go here! */}
+
           <View style={styles.colorArray}>
-              <TouchableOpacity style={ styles.color1}
-              onPress={() => this.changeBgColor(this.colors.black)} />
-              <TouchableOpacity style={ styles.color2}
-              onPress={() => this.changeBgColor(this.colors.charcoal)} />
-              <TouchableOpacity style={ styles.color3}
-              onPress={() => this.changeBgColor(this.colors.grey)} />
-              <TouchableOpacity style={ styles.color4}
-              onPress={() => this.changeBgColor(this.colors.green)} />
+              <TouchableOpacity accessible={true}
+              accessibilityLabel="black"
+              accessibilityHint='Allows you to add a black background to the chat'
+              accessibilityRole='button'
+              style={ styles.color1}
+              onPress={() => this.changeBgColor(this.colors.black)}>
+              </TouchableOpacity>
+
+              <TouchableOpacity accessible={true}
+              accessibilityLabel="charcoal"
+              accessibilityHint='Allows you to add a charcoal background to the chat'
+              accessibilityRole='button'
+              style={ styles.color2}
+              onPress={() => this.changeBgColor(this.colors.charcoal)}>
+              </TouchableOpacity>
+
+              <TouchableOpacity accessible={true}
+              accessibilityLabel="grey"
+              accessibilityHint='Allows you to add a grey background to the chat'
+              accessibilityRole='button'
+              style={ styles.color3}
+              onPress={() => this.changeBgColor(this.colors.grey)}>
+              </TouchableOpacity>
+
+              <TouchableOpacity accessible={true}
+              accessibilityLabel="green"
+              accessibilityHint='Allows you to add a green background to the chat'
+              accessibilityRole='button'
+              style={ styles.color4}
+              onPress={() => this.changeBgColor(this.colors.green)}>
+              </TouchableOpacity>
+
+              <TouchableOpacity accessible={true}
+              accessibilityLabel="gold"
+              accessibilityHint='Allows you to add a gold background to the chat'
+              accessibilityRole='button'
+              style={ styles.color5}
+              onPress={() => this.changeBgColor(this.colors.gold)}>
+              </TouchableOpacity>
+
           </View>
           <Pressable style={styles.startChatButton}
-              onPress={() => this.props.navigation.navigate('Chat', {name: this.state.name})}> 
+              onPress={() => this.props.navigation.navigate('Chat', 
+              {name: this.state.name, 
+              bgColor: this.state.bgColor,})}> 
             <Text styles={styles.startChatButtonText}>Start Chatting</Text>
           </Pressable>
           </ImageBackground>
@@ -71,6 +109,12 @@ export default class Start extends React.Component {
     container: {
       flex: 1,
     },
+   
+    colorArray: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      width: "50%",
+    },
 
     yourName: {
       color: '#757083',
@@ -79,10 +123,15 @@ export default class Start extends React.Component {
       opacity: 50,
     },
 
-    colorArray: {
+    inputBox: {
+      borderWidth: 2,
+      borderRadius: 1,
+      borderColor: "grey",
+      width: "88%",
+      height: 60,
+      paddingLeft: 20,
       flexDirection: "row",
-      justifyContent: "space-between",
-      width: "50%",
+      alignItems: "center",
     },
 
     color1: {
@@ -111,9 +160,16 @@ export default class Start extends React.Component {
       borderRadius: 25,
     },
 
+    color5: {
+      backgroundColor: "#FFCF40",
+      width: 50,
+      height: 50,
+      borderRadius: 25,
+    },
+
     backgroundColorChoose: {
-      color: '#757083',
-      fontSize: 16,
+      color: 'white',
+      fontSize: 18,
       fontWeight: "300",
       opacity: 100,
     },
@@ -129,9 +185,17 @@ export default class Start extends React.Component {
     },
 
     startChatButtonText: {
-      fontSize: 16,
+      fontSize: 18,
       fontWeight: "600",
       color: "#FFFFFF",
+    },
+
+    box1: {
+      backgroundColor: 'white',
+      height: "30%",
+      width: "88%",
+      justifyContent: "space-around",
+      alignItems: "center",
     },
 
     headerImage: {
