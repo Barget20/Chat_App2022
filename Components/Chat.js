@@ -1,6 +1,6 @@
 import React from 'react';
-import { GiftedChat } from 'react-native-gifted-chat';
-import { View, Text, Platform, KeyboardAvoidingView, Button} from 'react-native';
+import { GiftedChat, Bubble } from 'react-native-gifted-chat';
+import { StyleSheet, View, Text, Platform, KeyboardAvoidingView, Button} from 'react-native';
 
 export default class Chat extends React.Component {
 
@@ -42,6 +42,9 @@ export default class Chat extends React.Component {
             return (
                 <Bubble {...props}
                 wrapperStyle={{
+                    // left: {
+                    //     backgroundColor: '',
+                    // },
                     right: {
                         backgroundColor: '#000',
                     },
@@ -60,7 +63,7 @@ export default class Chat extends React.Component {
                 backgroundColor: bgColor,
                 }} >
             <GiftedChat
-                renderBubble={this.renderBubble.bind(this)}
+                renderBubble={renderBubble.bind()}
                 messages={this.state.messages}
                 onSend={(messages) => this.onSend(messages)}
                 user={{
@@ -69,7 +72,8 @@ export default class Chat extends React.Component {
                 />   
             <Button title="Go to Start"
                 onPress={() => this.props.navigation.navigate("Start")} />
-            
+
+            {/* This is to fix the overlap of the keyboard from seeing the text issue */}
             {Platform.OS === "android" ? (
                 <KeyboardAvoidingView behavior='height' />
             )   : null}    
@@ -77,3 +81,9 @@ export default class Chat extends React.Component {
         );
     }
 }
+
+    const styles = StyleSheet.create({
+        container: {
+            flex: 1,
+        },
+    })
