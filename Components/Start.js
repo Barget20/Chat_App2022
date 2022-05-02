@@ -30,7 +30,7 @@ export default class Start extends React.Component {
         <View style={styles.container}>
           <ImageBackground source={Image} resizeMode="cover" style= {styles.headerImage}>
 
-          <Text style={styles.appTitle}>Chat App</Text>
+          <Text style={styles.appTitle}>Chatter Box</Text>
           <View style={styles.box1}>
             <View style={styles.inputBox}>
               <TextInput style={styles.yourName}
