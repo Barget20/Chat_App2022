@@ -121,6 +121,7 @@ export default class Start extends React.Component {
       fontSize: 16,
       fontWeight: "300",
       opacity: 50,
+      width: "100%"
     },
 
     inputBox: {

@@ -12,7 +12,7 @@ export default class Chat extends React.Component {
     }
 
     componentDidMount() {
-        this.state = ({
+        this.setState ({
             messages: [
               { _id: 1,
               text: 'Hello Developer',
