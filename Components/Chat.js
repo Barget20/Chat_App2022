@@ -42,9 +42,9 @@ export default class Chat extends React.Component {
             return (
                 <Bubble {...props}
                 wrapperStyle={{
-                    // left: {
-                    //     backgroundColor: '',
-                    // },
+                    left: {
+                        backgroundColor: 'white',
+                    },
                     right: {
                         backgroundColor: '#000',
                     },
@@ -58,20 +58,17 @@ export default class Chat extends React.Component {
         this.props.navigation.setOptions({ title: name });
 
         return (
-            <View style={{flex:1, justifyContent: 'center', 
-                alignItems: 'center',
-                backgroundColor: bgColor,
-                }} >
+            <View style={{flex:1, backgroundColor: bgColor }} >
             <GiftedChat
-                renderBubble={renderBubble.bind()}
+                renderBubble={this.renderBubble.bind()}
                 messages={this.state.messages}
                 onSend={(messages) => this.onSend(messages)}
                 user={{
                     _id: 1,
                 }}
                 />   
-            <Button title="Go to Start"
-                onPress={() => this.props.navigation.navigate("Start")} />
+            {/* <Button title="Go to Start"
+                onPress={() => this.props.navigation.navigate("Start")} /> */}
 
             {/* This is to fix the overlap of the keyboard from seeing the text issue */}
             {Platform.OS === "android" ? (

@@ -112,7 +112,7 @@ export default class Start extends React.Component {
    
     colorArray: {
       flexDirection: "row",
-      justifyContent: "space-between",
+      justifyContent: "center",
       width: "50%",
     },
 
