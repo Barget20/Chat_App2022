@@ -6,7 +6,7 @@ import firestore from 'firebase';
 import { FlatList } from 'react-native-gesture-handler';
 import App from '../App';
 
-const firebase = require('firebase');
+// const firebase = require('firebase');
 require('firebase/firestore');
 
 const firebaseConfig = {
