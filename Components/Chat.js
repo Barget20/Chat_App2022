@@ -2,11 +2,9 @@ import React from 'react';
 import { GiftedChat, Bubble } from 'react-native-gifted-chat';
 import { StyleSheet, View, Text, Platform, KeyboardAvoidingView, Button} from 'react-native';
 import firebase from 'firebase';
-import firestore from 'firebase';
 import { FlatList } from 'react-native-gesture-handler';
 import App from '../App';
 
-// const firebase = require('firebase');
 require('firebase/firestore');
 
 const firebaseConfig = {
@@ -17,11 +15,7 @@ const firebaseConfig = {
     messagingSenderId: "428772480448",
     appId: "1:428772480448:web:c678e94736a4fb19062425",
     measurementId: "G-Q42Q98PP68"
-  };
-  
-  
-  
-  
+  };  
 
 export default class Chat extends React.Component {
 
@@ -29,6 +23,12 @@ export default class Chat extends React.Component {
         super();
         this.state = {
             messages: [],
+            uid: 0,
+            user: {
+                _id: "",
+                name: "",
+                avatar: "",
+            },
         };
         if (!firebase.app.length){
             firebase.initializeApp(firebaseConfig);
@@ -49,81 +49,54 @@ export default class Chat extends React.Component {
                 user: data.user,
             });
         });
-    }
+        this.setState({
+            messages,
+        });
+    };
 
-    addMesssages() {
+    addMessages() {
+        const message = this.state.messages[0];
         this.referenceChatMessages.add({
-            name: "MessageListTest",
-            items: [],
+            _id: message._id,
+            text: message.text || "",
+            createdAt: message.createdAt,
+            user: this.state.user,
         });
     }
 
-    onSnapShot() {
-
-    }
-
-    render() {
-        return(
-            <View style={styles.container}>
-                <Text>{this.state.loggedInText}</Text>
-                <Text style={styles.text}>Your Message</Text>
-
-                <FlatList
-                    data={this.state.messages}
-                    remderItem={({ item }) => 
-                        <Text style={styles.item}>{item.user}: {item.messages}</Text>} 
-            />
-
-            <Button onPress={() => {
-                this.sendMessage();
-            }}
-            message = "text here" />
-            </View>
-        );
-    }
-
     componentDidMount() {
+        const {name} = this.props.route.params;
+        this.props.navigation.setOptions({ title: name });
         this.authUnsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
             if (!user) {
                 await firebase.auth().signInAnonymously();
             }
-        
+        // Sets state when app loads
             this.setState ({
                 uid: user.uid,
-                loggedInText: "Hello there",
+                messages: [],
+                user: {
+                    _id: user.uid,
+                    name: name,
+                    avatar: "http://placeimg.com/140/140/any",
+                },
             });
 
             this.unsubscribe = this.referenceChatMessages
                 .orderBy('createdAt', 'desc')
-                .onSnapShot(this.onCollectionUpdate);
+                .onSnapshot(this.onCollectionUpdate);
             });     
     }
-
-        //       No Longer Needed?!
-                //  text: 'Hello Developer',
-        //       loggedInText: 'Hello there',
-        //       createdAt: new Date(),
-        //       user: {
-        //         _id: 2,
-        //         name: 'React Native',
-        //         avatar: 'https://placeimg.com/140/140/any',
-        //       },
-        //       },
-        //       { _id: 2,
-        //         text: 'This is a system message',
-        //         createdAt: new Date(),
-        //         system: true,
-        //     },
-        //     ],
-        //   });
-        // }
-
-        
 
         onSend(messages = []) {
             this.setState((previousState) => ({
                 messages: GiftedChat.append(previousState.messages, messages),
-            }));
+            }),
+            // this function sends the current message to the database
+            () => {
+                this.addMessages();
+            }
+            );
         }
 
         renderBubble(props) {
@@ -144,9 +117,8 @@ export default class Chat extends React.Component {
 
 
     render () {
-        let { bgColor, name} = this.props.route.params;
-        this.props.navigation.setOptions({ title: name });
-
+        const { bgColor } = this.props.route.params;
+        
         return (
             <View style={{flex:1, backgroundColor: bgColor }} >
             <GiftedChat
@@ -154,11 +126,11 @@ export default class Chat extends React.Component {
                 messages={this.state.messages}
                 onSend={(messages) => this.onSend(messages)}
                 user={{
-                    _id: 1,
+                    _id: this.state.user._id,
+                    name: this.state.name,
+                    avatar: this.state.user.avatar,
                 }}
                 />   
-            {/* <Button title="Go to Start"
-                onPress={() => this.props.navigation.navigate("Start")} /> */}
 
             {/* This is to fix the overlap of the keyboard from seeing the text issue */}
             {Platform.OS === "android" ? (
