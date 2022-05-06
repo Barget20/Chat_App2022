@@ -2,7 +2,6 @@ import React from 'react';
 import { GiftedChat, Bubble } from 'react-native-gifted-chat';
 import { StyleSheet, View, Text, Platform, KeyboardAvoidingView, Button} from 'react-native';
 import firebase from 'firebase';
-import { FlatList } from 'react-native-gesture-handler';
 import App from '../App';
 
 require('firebase/firestore');
