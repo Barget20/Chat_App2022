@@ -1,8 +1,8 @@
 import React from 'react';
 import { GiftedChat, Bubble, InputToolbar } from 'react-native-gifted-chat';
 import { StyleSheet, View, Text, Platform, KeyboardAvoidingView, Button} from 'react-native';
-import AsyncStorage from '@react-native-community/async-storage';
-import NetInfo from 'react-native-community/netinfo';
+import {AsyncStorage} from '@react-native-async-storage/async-storage';
+import NetInfo from '@react-native-community/netinfo';
 import firebase from 'firebase';
 import App from '../App';
 
@@ -94,21 +94,11 @@ export default class Chat extends React.Component {
 
         NetInfo.fetch().then(connection => {
             if (connection.isConnected) {
-                console.log("online");
+                console.log('online');
             } else {
                 console.log('offline');
             }
         });
-
-        renderInputToolbar(props) {
-            if (this.state.isConnected == false) {
-            } else {
-                return( <InputToolbar
-                    {...props}
-                    />
-                );
-            }
-        }
 
         this.getMessages();
         const {name} = this.props.route.params;
@@ -133,6 +123,16 @@ export default class Chat extends React.Component {
                 .onSnapshot(this.onCollectionUpdate);
             });     
     }
+
+        renderInputToolbar(props) {
+            if (this.state.isConnected == false) {
+            } else {
+                return( <InputToolbar
+                    {...props}
+                    />
+                );
+            }
+        }
 
         onSend(messages = []) {
             this.setState((previousState) => ({
