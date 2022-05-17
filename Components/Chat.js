@@ -15,7 +15,7 @@ const firebaseConfig = {
     storageBucket: "chatter-box-625a0.appspot.com",
     messagingSenderId: "428772480448",
     appId: "1:428772480448:web:c678e94736a4fb19062425",
-    measurementId: "G-Q42Q98PP68"
+    measurementId: "G-Q42Q98PP68",
   };  
 
 export default class Chat extends React.Component {
@@ -31,7 +31,7 @@ export default class Chat extends React.Component {
                 avatar: "",
             },
         };
-        if (!firebase.apps.length){
+        if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
         }
         // This collects the list of messages
@@ -91,53 +91,55 @@ export default class Chat extends React.Component {
 
     componentDidMount() {
         
-
         NetInfo.fetch().then(connection => {
             if (connection.isConnected) {
-                console.log('online');
-            } else {
-                console.log('offline');
-            }
-        });
+                this.setState({ isConnected: true });
+                this.getMessages();
+                const {name} = this.props.route.params;
+                this.props.navigation.setOptions({ title: name });
+                this.authUnsubscribe = firebase
+                    .auth()
+                    .onAuthStateChanged(async (user) => {
+                        if(!user) {
+                            await firebase.auth().signInAnonymously();
+                        }
+                    // Sets state when app loads
+                        this.setState ({
+                        uid: user.uid,
+                        messages: [],
+                        user: {
+                            _id: user.uid,
+                            name: name,
+                            avatar: "http://placeimg.com/140/140/any",
+                        },
+                    });
 
-        this.getMessages();
-        const {name} = this.props.route.params;
-        this.props.navigation.setOptions({ title: name });
-        this.authUnsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
-            if (!user) {
-                await firebase.auth().signInAnonymously();
-            }
-        // Sets state when app loads
-            this.setState ({
-                uid: user.uid,
-                messages: [],
-                user: {
-                    _id: user.uid,
-                    name: name,
-                    avatar: "http://placeimg.com/140/140/any",
-                },
+                        this.unsubscribe = this.referenceChatMessages
+                            .orderBy('createdAt', 'desc')
+                            .onSnapshot(this.onCollectionUpdate);
+                    });     
+                }   else {
+                    this.setState({ isConnected: false});
+                    console.log("offline");
+                    this.getMessages();
+                }
             });
-
-            this.unsubscribe = this.referenceChatMessages
-                .orderBy('createdAt', 'desc')
-                .onSnapshot(this.onCollectionUpdate);
-            });     
-    }
+        }    
 
         renderInputToolbar(props) {
             if (this.state.isConnected == false) {
             } else {
-                return( <InputToolbar
+                return <InputToolbar
                     {...props}
-                    />
-                );
+                    />;
             }
         }
 
         onSend(messages = []) {
             this.setState((previousState) => ({
                 messages: GiftedChat.append(previousState.messages, messages),
-            }), () => {
+            }), 
+            () => {
                 this.saveMessages();
             });
         }
@@ -175,7 +177,7 @@ export default class Chat extends React.Component {
             <GiftedChat
                 renderBubble={this.renderBubble.bind()}
                 messages={this.state.messages}
-                renderInputToolbar={this.renderInputToolbar}
+                renderInputToolbar={this.renderInputToolbar.bind(this)}
                 onSend={(messages) => this.onSend(messages)}
                 user={{
                     _id: this.state.user._id,
