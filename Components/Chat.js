@@ -90,6 +90,8 @@ export default class Chat extends React.Component {
         }
     }
 
+    
+
     componentDidMount() {
         
         NetInfo.fetch().then(connection => {
@@ -128,8 +130,10 @@ export default class Chat extends React.Component {
         }    
 
         renderInputToolbar(props) {
+            // Hides Toolbar
             if (this.state.isConnected == false) {
             } else {
+                // Displays Toolbar
                 return <InputToolbar
                     {...props}
                     />;
