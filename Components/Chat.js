@@ -5,6 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import NetInfo from '@react-native-community/netinfo';
 import firebase from 'firebase';
 import App from '../App';
+import CustomActions from './CustomActions';
 
 require('firebase/firestore');
 
@@ -31,6 +32,8 @@ export default class Chat extends React.Component {
                 avatar: "",
             },
             isConnected: false,
+            image: null,
+            location: null,
         };
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
@@ -48,9 +51,15 @@ export default class Chat extends React.Component {
                 _id: data._id,
                 text: data.text,
                 createdAt: data.createdAt.toDate(),
-                user: data.user,
+                user: {
+                    _id: data.user._id,
+                    name: data.user.name,
+                },
+                image: data.image || null,
+                location: data.location || null,
             });
         });
+
         this.setState({
             messages,
         });
@@ -90,8 +99,6 @@ export default class Chat extends React.Component {
         }
     }
 
-    
-
     componentDidMount() {
         
         NetInfo.fetch().then(connection => {
@@ -129,15 +136,21 @@ export default class Chat extends React.Component {
             });
         }    
 
-        renderInputToolbar(props) {
-            // Hides Toolbar
-            if (this.state.isConnected == false) {
-            } else {
-                // Displays Toolbar
-                return <InputToolbar
-                    {...props}
-                    />;
+        componentWillUnmount() {
+            if (this.state.isConnected) {
+                this.authUnsubscribe();
+                this.unsubscribe();
             }
+        }
+
+        addMessages() {
+            const message = this.state.messages[0];
+            this.referenceChatMessages.add({
+                _id: message._id,
+                text: message.text || "",
+                createdAt: message.createdAt,
+                user: this.state.user,
+            });
         }
 
         onSend(messages = []) {
@@ -165,15 +178,20 @@ export default class Chat extends React.Component {
             );
         }
 
-        addMessages() {
-            const message = this.state.messages[0];
-            this.referenceChatMessages.add({
-                _id: message._id,
-                text: message.text || "",
-                createdAt: message.createdAt,
-                user: this.state.user,
-            });
+        renderCustomActions = (props) => 
+        <CustomActions {...props}/>;
+
+        renderInputToolbar(props) {
+            // Hides Toolbar
+            if (this.state.isConnected == false) {
+            } else {
+                // Displays Toolbar
+                return <InputToolbar
+                    {...props}
+                    />;
+            }
         }
+            
 
     render () {
         const { bgColor } = this.props.route.params;
@@ -184,6 +202,7 @@ export default class Chat extends React.Component {
                 renderBubble={this.renderBubble.bind()}
                 messages={this.state.messages}
                 renderInputToolbar={this.renderInputToolbar.bind(this)}
+                renderActions={this.renderCustomActions}
                 onSend={(messages) => this.onSend(messages)}
                 user={{
                     _id: this.state.user._id,
