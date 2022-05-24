@@ -4,7 +4,8 @@ import { StyleSheet, View, Text, Platform, KeyboardAvoidingView, Button} from 'r
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NetInfo from '@react-native-community/netinfo';
 import firebase from 'firebase';
-import App from '../App';
+import MapView from 'react-native-maps';
+// import App from '../App';
 import CustomActions from './CustomActions';
 
 require('firebase/firestore');
@@ -93,7 +94,7 @@ export default class Chat extends React.Component {
             await AsyncStorage.removeItem('messages');
             this.setState({
                 messages: []
-            })
+            });
         }   catch (error) {
             console.log(error.message);
         }
@@ -150,12 +151,14 @@ export default class Chat extends React.Component {
                 text: message.text || "",
                 createdAt: message.createdAt,
                 user: this.state.user,
+                image: message.image || null,
+                location: message.location || null
             });
         }
 
         onSend(messages = []) {
             this.setState((previousState) => ({
-                messages: GiftedChat.append(previousState.messages, messages),
+                messages: GiftedChat.append(previousState.messages, messages)
             }), 
             () => {
                 this.addMessages();
@@ -191,6 +194,30 @@ export default class Chat extends React.Component {
                     />;
             }
         }
+
+        renderCustomView(props) {
+            const { currentMessage } = props;
+            console.log(currentMessage);
+            if (currentMessage.location) {
+                console.log("currentMessage");
+                return (
+                    <MapView style={{
+                        width: 150,
+                        height: 100,
+                        borderRadius: 13,
+                        margin: 3
+                    }}
+                    region={{
+                        latitude: currentMessage.location.latitude,
+                        longitude: currentMessage.location.longitude,
+                        latitudeDelta: 0.0922,
+                        longitudeDelta: 0.0421
+                    }}
+                    />
+                );
+            }
+            return null;
+        }
             
 
     render () {
@@ -203,6 +230,7 @@ export default class Chat extends React.Component {
                 messages={this.state.messages}
                 renderInputToolbar={this.renderInputToolbar.bind(this)}
                 renderActions={this.renderCustomActions}
+                renderCustomView={this.renderCustomView}
                 onSend={(messages) => this.onSend(messages)}
                 user={{
                     _id: this.state.user._id,

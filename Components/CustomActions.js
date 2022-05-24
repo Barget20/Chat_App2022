@@ -26,9 +26,10 @@ export default class CustomActions extends React.Component {
             this.setState({
                 image: result
             });
+            this.props.onSend({ image: imageUrl});
             }
         }
-    }
+    };
         
     takePhoto = async () => {
         const {status} = await Permissions.askAsync(Permissions.CAMERA_ROLL, Permissions.CAMERA);
@@ -39,12 +40,14 @@ export default class CustomActions extends React.Component {
             }).catch(error => console.log(error));
         
             if (!result.cancelled) {
-            this.setState({
-                image: result
-            });
+            // this.setState({
+            //     image: result,
+            // });
+            const imageUrl = await this.uploadImageFetch(result.uri);
+            this.props.onSend({ image: imageUrl});
             }
         }
-    }
+    };
         
     getLocation = async () => {
         const {status} = await Permissions.askAsync(Permissions.LOCATION);
@@ -52,12 +55,18 @@ export default class CustomActions extends React.Component {
             let result = await Location.getCurrentPositionAsync({})
             .catch(error => console.log(error))
             if (result) {
-            this.setState({
-                location: result
+            // this.setState({
+            //     location: result
+            // });
+            this.props.onSend({
+                location: {
+                    longitude: result.coords.longitude,
+                    latitude: result.coords.latitude,
+                },
             });
             }
         }
-    }
+    };
 
     uploadImageFetch = async (uri) => {
         const blob = await new Promise((resolve, reject) => {
@@ -90,44 +99,25 @@ export default class CustomActions extends React.Component {
         const options = ['Choose From Library', 'Take Picture', 'Send Location', 'Cancel'];
         const cancelButtonIndex = options.length - 1;
         this.context.actionSheet().showActionSheetWithOptions(
-            { options, cancelButtonIndex, },
+            { options, cancelButtonIndex },
             async (buttonIndex) => {
                 switch (buttonIndex) {
                     case 0:
                         console.log('user wants to pick an image');
-                        return;
+                        return this.pickImage();
                     case 1:
                         console.log('user wants to take a photo');
-                        return;
+                        return this.takePhoto();
                     case 2:
                         console.log('user wants to get their location');
+                        return this.getLocation();
                     default:
                 }
             },
         );
     };
 
-    renderCustomView (props) {
-        const { currentMessage } = props;
-        if (currentMessage.location) {
-            return (
-                <MapView
-                style={{width: 150,
-                    height: 100,
-                    borderRadius: 13,
-                    margin: 3}}
-                region={{
-                    latitude: currentMessage.location.latitude,
-                    longitude: currentMessage.location.longitude,
-                    latitudeDelta: 0.0922,
-                    longitudeDelta: 0.0421,
-                }}
-                />
-            );
-        }
-        return null;
-    }
-
+    
 
 render() {
     return (
@@ -139,7 +129,7 @@ render() {
         
         {/* <View style={{flex: 1, justifyContent: 'center'}}> */}
         {/* <Text>{this.state.text}</Text> */}
-        <Button title="Pick an image from the library"
+        {/* <Button title="Pick an image from the library"
             onPress={this.pickImage} />
 
         <Button title="Take a photo"
@@ -192,14 +182,14 @@ render() {
             this.setState({ text: `error: ${e.message}` });
             }
             }}
-            />
-            </View>
+            /> */}
+            </View>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
         </TouchableOpacity>
     );
     }
 }
 
-CustomActions.contextType= {
+CustomActions.contextTypes= {
     actionSheet: PropTypes.func,
 };
 
