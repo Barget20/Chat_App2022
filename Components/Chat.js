@@ -41,6 +41,8 @@ export default class Chat extends React.Component {
         }
         // This collects the list of messages
         this.referenceChatMessages = firebase.firestore().collection('messages');
+
+        // Do I add pictures, video, location code here??
     }
 
     onCollectionUpdate = (querySnapShot) => {
