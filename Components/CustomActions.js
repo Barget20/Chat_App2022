@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, Button, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, Button, TouchableOpacity, View, CameraRoll } from 'react-native';
 import MapView from 'react-native-maps';
 import * as Permissions from 'expo-permissions';
 import * as ImagePicker from 'expo-image-picker';
@@ -15,8 +15,10 @@ export default class CustomActions extends React.Component {
     }
 
     pickImage = async () => {
-        const {status} = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-          
+        const {status} = await 
+        // Permissions.askAsync(Permissions.CAMERA_ROLL);
+        ImagePicker.requestMediaLibraryPermissionsAsync();  
+
         if(status === 'granted') {
             let result = await ImagePicker.launchImageLibraryAsync({
                 mediaTypes: 'Images',
@@ -32,8 +34,10 @@ export default class CustomActions extends React.Component {
     };
         
     takePhoto = async () => {
-        const {status} = await Permissions.askAsync(Permissions.CAMERA_ROLL, Permissions.CAMERA);
-        
+        const {status} = await 
+        // Permissions.askAsync(Permissions.CAMERA_ROLL, Permissions.CAMERA);
+        Camera.requestPermissionsAsync()
+
         if(status === 'granted') {
             let result = await ImagePicker.launchCameraAsync({
                 mediaTypes: 'Images',
@@ -50,7 +54,10 @@ export default class CustomActions extends React.Component {
     };
         
     getLocation = async () => {
-        const {status} = await Permissions.askAsync(Permissions.LOCATION);
+        const {status} = await 
+        // Permissions.askAsync(Permissions.LOCATION);
+        Location.requestBackgroundPermissionsAsync()
+
         if(status === 'granted') {
             let result = await Location.getCurrentPositionAsync({})
             .catch(error => console.log(error))
