@@ -17,7 +17,7 @@
   <p> expo install expo-location expo install react-native-maps <p>
   <p> npm install --save prop-types  <p>
     
-<h2> Expo </h2>
+<h2> Expo: </h2>
   
   <p> 1) npm install expo-cli --global <br>
       2) expo init 'INSERT_NAME_HERE' <p>
