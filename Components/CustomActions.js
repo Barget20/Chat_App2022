@@ -25,9 +25,10 @@ export default class CustomActions extends React.Component {
             }).catch(error => console.log(error));
           
             if (!result.cancelled) {
-            this.setState({
-                image: result
-            });
+            // this.setState({
+            //     image: result
+            // });
+            const imageUrl = await this.uploadImageFetch(result.uri);
             this.props.onSend({ image: imageUrl});
             }
         }
@@ -35,8 +36,7 @@ export default class CustomActions extends React.Component {
         
     takePhoto = async () => {
         const {status} = await 
-        // Permissions.askAsync(Permissions.CAMERA_ROLL, Permissions.CAMERA);
-        Camera.requestPermissionsAsync()
+        Permissions.askAsync(Permissions.CAMERA_ROLL, Permissions.CAMERA);
 
         if(status === 'granted') {
             let result = await ImagePicker.launchCameraAsync({
