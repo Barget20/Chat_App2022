@@ -4,4 +4,4 @@
 
 <h2> Description: </h2>
 
-<p> This project includes the use of React Native, Expo, and a Google Firestore Database. A user will be able to enter their name and choose a background color before enterting the chat.
+<p> This project includes the use of React Native, Expo, and a Google Firestore Database. A user will be able to enter their name and choose a background color before enterting the chat. The user will also be able to send message, photos, and share geolocation once inside the chat application.  
