@@ -15,9 +15,16 @@
   <p> npm install --save @react-native-community/netinfo <p>
   <p> expo install expo-image-picker <p>
   <p> expo install expo-location expo install react-native-maps <p>
-  <p> "prop-types"  
+  <p> npm install --save prop-types  <p>
+    
+<h2> Expo <h2>
+  
+  <p> 1) npm install expo-cli --global <br>
+      2) expo init 'INSERT_NAME_HERE' <p>
   
 <h2> Firebase: </h2>
+
+<p> npm install --save firebase <p>
 
 <p> After initial setup, go to "Storage" under Project overview. Then go to "Rules." Under Rules click on "Edit Rules" and change the rules to...
   service firebase.storage {
