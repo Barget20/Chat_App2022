@@ -7,9 +7,7 @@ import firebase from 'firebase';
 import MapView from 'react-native-maps';
 // import App from '../App';
 import CustomActions from './CustomActions';
-import * as Location from 'expo-location';
-import * as Permissions from 'expo-permissions';
-import * as ImagePicker from 'expo-image-picker';
+
 
 // const granted = await Permissions.askAsync(Permissions.LOCATION);
 
