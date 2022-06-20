@@ -34,3 +34,7 @@
   }
   }
   }
+  
+<h2> Sample Video: </h2>
+
+![Recording 2022-05-03 at 12 06 56](https://user-images.githubusercontent.com/89669426/174530419-eb5939af-0232-4ab7-8217-9536ed107249.gif)
